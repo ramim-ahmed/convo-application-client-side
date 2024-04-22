@@ -9,7 +9,9 @@ export default function Nav() {
           <h1 className="text-2xl font-bold">Convo</h1>
         </div>
         <Link to="sign-in">
-          <Button className="rounded-none">SignIn</Button>
+          <Button variant="outline" className="rounded-none">
+            SignIn
+          </Button>
         </Link>
       </nav>
     </div>
