@@ -1,16 +1,36 @@
 /* eslint-disable react/prop-types */
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
-
+import axios from "@/axios/axios";
+import toast from "react-hot-toast";
 export default function Post({ post }) {
-  const { content, user, like } = post || {};
-  const { name } = user || {};
+  const { _id, content, user, like } = post || {};
+  const { name, avatar } = user || {};
+  const queryClient = useQueryClient();
+  const { mutateAsync: addLike } = useMutation({
+    mutationFn: async () => {
+      return await axios.patch(`/posts/add-like/${_id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["Posts"]);
+    },
+  });
+
+  const handleAddLikePost = async () => {
+    try {
+      await addLike();
+      toast.success("Like Added!!");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <div className="border-b">
       <div className="bg-white p-6">
         <div className="flex space-x-4">
           <img
             className="w-12 h-12 object-cover rounded-full"
-            src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            src={avatar}
             alt=""
           />
           <div>
@@ -22,7 +42,10 @@ export default function Post({ post }) {
           <p className="text-base font-medium">{content}</p>
         </div>
         <div>
-          <Button variant="outline"> {like} Likes</Button>
+          <Button onClick={() => handleAddLikePost()} variant="outline">
+            {" "}
+            {like} Likes
+          </Button>
         </div>
       </div>
     </div>
