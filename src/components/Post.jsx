@@ -2,7 +2,7 @@
 import { Button } from "./ui/button";
 
 export default function Post({ post }) {
-  const { content, user } = post || {};
+  const { content, user, like } = post || {};
   const { name } = user || {};
   return (
     <div className="border-b">
@@ -22,7 +22,7 @@ export default function Post({ post }) {
           <p className="text-base font-medium">{content}</p>
         </div>
         <div>
-          <Button variant="outline"> 12 Likes</Button>
+          <Button variant="outline"> {like} Likes</Button>
         </div>
       </div>
     </div>
