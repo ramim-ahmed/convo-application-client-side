@@ -6,7 +6,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useAuth from "@/hooks/useAuth";
 export default function Profile() {
-  const { authUser } = useAuth();
+  const { authUser, logout } = useAuth();
+  console.log(authUser);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -18,7 +19,9 @@ export default function Profile() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuItem>{authUser?.displayName}</DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => logout()} className="cursor-pointer">
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

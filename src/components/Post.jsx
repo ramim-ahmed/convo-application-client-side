@@ -3,10 +3,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import axios from "@/axios/axios";
 import toast from "react-hot-toast";
+import useAuth from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import TimeAgo from "./TimeAgo";
 export default function Post({ post }) {
-  const { _id, content, user, like } = post || {};
+  const { authUser } = useAuth();
+  const { _id, content, user, like, createdAt } = post || {};
   const { name, avatar } = user || {};
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { mutateAsync: addLike } = useMutation({
     mutationFn: async () => {
       return await axios.patch(`/posts/add-like/${_id}`);
@@ -17,6 +22,9 @@ export default function Post({ post }) {
   });
 
   const handleAddLikePost = async () => {
+    if (!authUser) {
+      return navigate("/sign-in");
+    }
     try {
       await addLike();
       toast.success("Like Added!!");
@@ -35,7 +43,9 @@ export default function Post({ post }) {
           />
           <div>
             <h3 className="text-xl font-semibold">{name}</h3>
-            <p className=" text-sm text-gray-600">an hour ago</p>
+            <p className=" text-sm text-gray-600">
+              <TimeAgo date={createdAt} />
+            </p>
           </div>
         </div>
         <div className="py-5">
@@ -43,8 +53,7 @@ export default function Post({ post }) {
         </div>
         <div>
           <Button onClick={() => handleAddLikePost()} variant="outline">
-            {" "}
-            {like} Likes
+            {like} {like > 1 ? "Likes" : "Like"}
           </Button>
         </div>
       </div>

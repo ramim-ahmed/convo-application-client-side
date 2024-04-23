@@ -5,6 +5,7 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithPopup,
+  signOut,
 } from "firebase/auth";
 import "../firebase";
 export const AuthContext = createContext();
@@ -21,6 +22,12 @@ export default function AuthProvider({ children }) {
       ...user,
     });
   };
+
+  //logout user
+  const logout = () => {
+    const auth = getAuth();
+    return signOut(auth);
+  };
   // auth state observer
   useEffect(() => {
     const auth = getAuth();
@@ -30,7 +37,7 @@ export default function AuthProvider({ children }) {
     return () => unSubscribe();
   }, []);
 
-  const authValue = { authUser, signInUser };
+  const authValue = { authUser, signInUser, logout };
 
   return (
     <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
