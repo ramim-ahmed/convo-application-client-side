@@ -6,8 +6,10 @@ import { useRef } from "react";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Input } from "./ui/input";
 export default function CreatePost() {
   const postInputRef = useRef();
+  const postTitleRef = useRef();
   const queryClient = useQueryClient();
   const { authUser } = useAuth();
   const navigate = useNavigate();
@@ -30,13 +32,14 @@ export default function CreatePost() {
         email: authUser?.email || "",
         avatar: authUser?.photoURL || "",
       },
+      title: postTitleRef.current.value,
       content: postInputRef.current.value,
     };
     try {
       await addNewPost(data);
       toast.success("Post created successfully!!");
       postInputRef.current.value = "";
-      console.log();
+      postTitleRef.current.value = "";
     } catch (error) {
       toast.error(error.message);
     }
@@ -44,11 +47,17 @@ export default function CreatePost() {
 
   return (
     <div>
-      <div>
+      <div className="bg-white p-4 rounded-md">
+        <Input
+          ref={postTitleRef}
+          placeholder="title"
+          className="placeholder:text-base text-lg"
+          required
+        />
         <Textarea
           ref={postInputRef}
-          className="placeholder:text-base text-lg"
-          placeholder="Type your content...."
+          className="placeholder:text-base text-lg mt-2"
+          placeholder="type post content..."
           required
         />
         <div className="flex justify-end mt-3">

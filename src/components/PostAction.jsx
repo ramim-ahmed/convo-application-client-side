@@ -10,7 +10,7 @@ import {
 import axios from "@/axios/axios";
 import Swal from "sweetalert2";
 
-export default function PostAction({ setEditable, id }) {
+export default function PostAction({ editable, setEditable, id }) {
   const queryClient = useQueryClient();
   const { mutateAsync: deletePost } = useMutation({
     mutationFn: async () => {
@@ -65,10 +65,10 @@ export default function PostAction({ setEditable, id }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-10">
         <DropdownMenuItem
-          onClick={() => setEditable(true)}
+          onClick={() => setEditable(!editable)}
           className="cursor-pointer font-medium"
         >
-          Edit Post
+          {editable ? "Edit Cancel" : "Edit"}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => handleDeletePost()}

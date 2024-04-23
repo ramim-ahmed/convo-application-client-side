@@ -8,9 +8,9 @@ export default function Nav() {
   return (
     <div className="border-b shadow">
       <nav className="max-w-3xl mx-auto flex justify-between px-3 items-center py-3">
-        <div>
-          <h1 className="text-2xl font-bold">Convo</h1>
-        </div>
+        <Link to="/">
+          <h1 className="text-2xl font-bold cursor-pointer">Convo App</h1>
+        </Link>
         {authUser ? (
           <Profile />
         ) : (

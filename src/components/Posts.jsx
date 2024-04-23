@@ -1,8 +1,7 @@
+/* eslint-disable react/prop-types */
 import Post from "./Post";
 import Loader from "./Loader";
-import usePosts from "@/hooks/usePosts";
-export default function Posts() {
-  const { data, isLoading } = usePosts();
+export default function Posts({ data, isLoading }) {
   return (
     <div className="border">
       {isLoading ? (

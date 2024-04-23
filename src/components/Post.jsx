@@ -11,8 +11,9 @@ import { useRef, useState } from "react";
 export default function Post({ post }) {
   const [editable, setEditable] = useState(false);
   const updateInputRef = useRef();
+  const updateTitleRef = useRef();
   const { authUser } = useAuth();
-  const { _id, content, user, like, createdAt } = post || {};
+  const { _id, content, user, likes, createdAt, title } = post || {};
   const { name, avatar, email } = user || {};
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -48,8 +49,12 @@ export default function Post({ post }) {
 
   const handleUpdatePost = async (e) => {
     e.preventDefault();
+    const data = {
+      title: updateTitleRef.current.value,
+      content: updateInputRef.current.value,
+    };
     try {
-      await updateContent({ content: updateInputRef.current.value });
+      await updateContent(data);
       toast.success("Post is updated successfully!!");
       setEditable(false);
     } catch (error) {
@@ -64,7 +69,7 @@ export default function Post({ post }) {
         <div className="flex justify-between items-center">
           <div className="flex space-x-4">
             <img
-              className="w-12 h-12 object-cover rounded-full"
+              className="w-12 h-12 object-cover rounded-full border border-indigo-700"
               src={avatar}
               alt=""
             />
@@ -76,12 +81,22 @@ export default function Post({ post }) {
             </div>
           </div>
           {authUser?.email === email && (
-            <PostAction setEditable={setEditable} id={_id} />
+            <PostAction
+              editable={editable}
+              setEditable={setEditable}
+              id={_id}
+            />
           )}
         </div>
         <div className="py-5">
           {editable ? (
-            <form onSubmit={handleUpdatePost}>
+            <form onSubmit={handleUpdatePost} className="space-y-2">
+              <input
+                ref={updateTitleRef}
+                type="text"
+                className="w-full px-5 py-2 rounded-md border border-black"
+                defaultValue={title}
+              />
               <input
                 className="w-full px-5 py-2 rounded-md border border-black"
                 ref={updateInputRef}
@@ -90,12 +105,15 @@ export default function Post({ post }) {
               <input hidden type="submit" value="submit" />
             </form>
           ) : (
-            <p className="text-base font-medium">{content}</p>
+            <div>
+              <h1 className="text-xl font-semibold">{title}</h1>
+              <p className="text-base mt-2 text-gray-600">{content}</p>
+            </div>
           )}
         </div>
         <div>
           <Button onClick={() => handleAddLikePost()} variant="outline">
-            {like} {like > 1 ? "Likes" : "Like"}
+            {likes} {likes > 1 ? "Likes" : "Like"}
           </Button>
         </div>
       </div>
